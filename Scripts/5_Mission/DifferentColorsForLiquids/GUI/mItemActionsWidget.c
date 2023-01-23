@@ -2,16 +2,110 @@ modded class ItemActionsWidget
 {
 	override protected void BuildCursor()
 	{
+		super.BuildCursor();
+		
 		// Добавляем пустую строку, чтобы отделить логи в этом файле от обычных
 		Print("\n");
+		// Добавляем отметку, в каком файле и методе мы сейчас находимся
+		Print("ItemActionsWidget::BuildCursor() Called this method");
 	
-		super.BuildCursor();	
+		// Пробуем новый метод изменения
+		ItemBase itemInHands = ItemBase.Cast(m_EntityInHands);
+		if (itemInHands)
+			Print( "ItemActionsWidget::BuildCursor() itemInHands: " + itemInHands );
+		if ( itemInHands && itemInHands.GetQuantity() > 0 && itemInHands.IsLiquidContainer() )
+		{
+			int liquid_type = itemInHands.GetLiquidType();
+			
+			if (liquid_type == LIQUID_GASOLINE || liquid_type == LIQUID_WATER)
+			{
+				// Ищем нужный виджет
+				Widget widget = m_Root.FindAnyWidget("ia_item");
+				Print( "ItemActionsWidget::BuildCursor() widget: " + widget );
+				
+				// Ищем строку состояния		
+				Print( "ItemActionsWidget::BuildCursor() widget.FindAnyWidget('ia_item_quantity_pb'): " + widget.FindAnyWidget("ia_item_quantity_pb") );
+				ProgressBarWidget progressBar = ProgressBarWidget.Cast( widget.FindAnyWidget("ia_item_quantity_pb") );
+				Print( "ItemActionsWidget::BuildCursor() progressBar: " + progressBar );
+				
+				// Меняем цвет в ней
+				if ( liquid_type == LIQUID_GASOLINE )
+					// Colors.ORANGE - https://www.htmlcsscolor.com/hex/FFA500
+					progressBar.SetColor( ARGB( 255, 255, 165, 0 ) );
+				if ( liquid_type == LIQUID_WATER )
+					// Colors.COLOR_LIQUID - https://www.htmlcsscolor.com/hex/0000FF
+					//progressBar.SetColor( ARGB( 255, 0, 0, 255 ) );	// -16776961
+					//progressBar.SetColor( Colors.COLOR_LIQUID );	// 61183
+					//progressBar.SetColor( 16772608 );	// 
+					// Подобрал с помощью Colour picker в гугле
+					progressBar.SetColor( ARGB( 255, 0, 255, 255 ) );	// -16711681
+			}
+		}
+		
+		
+		
+		
+		
+		
 		
 		
 		//! Меняем цвет полоски только для канистры
 			// Делаем это здесь, так как только тут нам известно, что за предмет в руках у игрока
-		if ( m_EntityInHands && m_EntityInHands.GetType() == "CanisterGasoline" )
+		//if ( m_EntityInHands && m_EntityInHands.GetType() == "CanisterGasoline" )
+		//{
+		
+		// Попробуем по типу жидкости менять цвет
+			// Получаем тип жидкости
+			// Если то, что нам нужно, то производим замену
+		
+		// Объявляем эти переменные, чтобы вызвать GetItemQuantity()
+			// TO DO Уточнить, почему мы не можем получить эти значения после вызова super.BuildCursor()
+		/*int q_type = 0;
+		int q_min, q_max = -1;
+		float q_cur = -1.0;
+		
+		// Вызываем этот метод, чтобы получить значение q_cur, которое будем использовать ниже
+		GetItemQuantity(q_type, q_cur, q_min, q_max);
+		Print( "ItemActionsWidget::BuildCursor() q_cur: " + q_cur );
+		
+		if ( q_cur > 0)
 		{
+			// Меняем класс у canisterGasoline, чтобы выполнить GetLiquidType()
+			ItemBase itemInHands = ItemBase.Cast(m_EntityInHands);
+			Print( "ItemActionsWidget::BuildCursor() itemInHands: " + itemInHands );
+			
+			int liquid_type = itemInHands.GetLiquidType();
+			Print( "ItemActionsWidget::BuildCursor() liquid_type: " + liquid_type );
+			
+			if (liquid_type == LIQUID_GASOLINE || liquid_type == LIQUID_WATER)
+			{
+				// Ищем нужный виджет
+				Widget widget = m_Root.FindAnyWidget("ia_item");
+				Print( "ItemActionsWidget::BuildCursor() widget: " + widget );
+				
+				// Ищем строку состояния		
+				Print( "ItemActionsWidget::BuildCursor() widget.FindAnyWidget('ia_item_quantity_pb'): " + widget.FindAnyWidget("ia_item_quantity_pb") );
+				ProgressBarWidget progressBar = ProgressBarWidget.Cast( widget.FindAnyWidget("ia_item_quantity_pb") );
+				Print( "ItemActionsWidget::BuildCursor() progressBar: " + progressBar );
+				
+				// Меняем цвет в ней
+				if ( liquid_type == LIQUID_GASOLINE )
+					// Colors.ORANGE - https://www.htmlcsscolor.com/hex/FFA500
+					progressBar.SetColor( ARGB( 255, 255, 165, 0 ) );
+				if ( liquid_type == LIQUID_WATER )
+					// Colors.COLOR_LIQUID - https://www.htmlcsscolor.com/hex/0000FF
+					//progressBar.SetColor( ARGB( 255, 0, 0, 255 ) );	// -16776961
+					//progressBar.SetColor( Colors.COLOR_LIQUID );	// 61183
+					//progressBar.SetColor( 16772608 );	// 
+					// Подобрал с помощью Colour picker в гугле
+					progressBar.SetColor( ARGB( 255, 0, 255, 255 ) );	// -16711681
+			}
+		}*/
+		
+		// TO DO Проверить, а надо ли сбрасывать на дефолтный
+			// Если не сбрасывать, то при пустой строке остаётся цвет той жидкости, что была в контейнере
+			
+		/*
 			// Ищем нужный виджет
 			Widget widget = m_Root.FindAnyWidget("ia_item");
 			Print( "ItemActionsWidget::BuildCursor() widget: " + widget );
@@ -33,10 +127,10 @@ modded class ItemActionsWidget
 			Print( "ItemActionsWidget::BuildCursor() q_cur: " + q_cur );
 			
 			if ( q_cur > 0)
-			{		
+			{	
 				// Меняем класс у canisterGasoline, чтобы выполнить GetLiquidType()
 				CanisterGasoline canisterGasoline = CanisterGasoline.Cast(m_EntityInHands);
-			Print( "ItemActionsWidget::BuildCursor() canisterGasoline: " + canisterGasoline );
+				Print( "ItemActionsWidget::BuildCursor() canisterGasoline: " + canisterGasoline );
 								
 				if (canisterGasoline)
 				{
@@ -60,7 +154,8 @@ modded class ItemActionsWidget
 			{
 				progressBar.SetColor(-1);
 			}
-		}	
+		*/
+		//}	
 	}	
 		// Код ниже РАБОЧИЙ
 		/*

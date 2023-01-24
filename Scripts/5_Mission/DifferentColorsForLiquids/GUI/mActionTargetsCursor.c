@@ -5,18 +5,21 @@ modded class ActionTargetsCursor
 		super.PrepareCursorContent();
 		
 		// Добавляем пустую строку, чтобы отделить логи в этом файле от обычных
-		Print("\n");
+		//Print("\n");
 		// Добавляем отметку, в каком файле и методе мы сейчас находимся
-		Print("ActionTargetsCursor::PrepareCursorContent() Called this method");
+		//Print("ActionTargetsCursor::PrepareCursorContent() Called this method");
 
 		ItemBase itemUnderCursor = ItemBase.Cast(m_Target.GetObject());
 		if (itemUnderCursor)
 			Print( "ActionTargetsCursor::PrepareCursorContent() itemUnderCursor: " + itemUnderCursor );
-		if ( itemUnderCursor && itemUnderCursor.GetQuantity() > 0 && itemUnderCursor.IsLiquidContainer() )
+		if (itemUnderCursor && itemUnderCursor.GetQuantity() > 0 && itemUnderCursor.IsLiquidContainer())
 		{
 			int liquid_type = itemUnderCursor.GetLiquidType();
+			Print("ActionTargetsCursor::PrepareCursorContent() liquid_type: " + liquid_type);
 			
-			if (liquid_type == LIQUID_GASOLINE || liquid_type == LIQUID_WATER)
+			Print("ActionTargetsCursor::PrepareCursorContent() liquid_type & GROUP_LIQUID_BLOOD: " + (liquid_type & GROUP_LIQUID_BLOOD));
+						
+			if (liquid_type == LIQUID_GASOLINE || liquid_type == LIQUID_WATER || liquid_type & GROUP_LIQUID_BLOOD)
 			{
 				Widget widget = m_Root.FindAnyWidget("item");
 			
@@ -28,18 +31,20 @@ modded class ActionTargetsCursor
 				// Получаем текущий цвет строки состояния
 				Print( "ActionTargetsCursor::PrepareCursorContent() progressBar.GetColor(): " + progressBar.GetColor() );
 				
-				if ( liquid_type == LIQUID_GASOLINE )
+				if (liquid_type == LIQUID_GASOLINE)
 					// Colors.ORANGE - https://www.htmlcsscolor.com/hex/FFA500
 					progressBar.SetColor( ARGB( 255, 255, 165, 0 ) );
 				// ??? TO DO Речная вода действительно существует
 					// Похоже, что нет
-				if ( liquid_type == LIQUID_WATER )
+				if (liquid_type == LIQUID_WATER)
 					// Colors.COLOR_LIQUID - https://www.htmlcsscolor.com/hex/0000FF
 					//progressBar.SetColor( ARGB( 255, 0, 0, 255 ) );	// -16776961
 					//progressBar.SetColor( Colors.COLOR_LIQUID );	// 61183
 					//progressBar.SetColor( 16772608 );	// 
 					// Подобрал с помощью Colour picker в гугле
 					progressBar.SetColor( ARGB( 255, 0, 255, 255 ) );	// -16711681
+				if (liquid_type & GROUP_LIQUID_BLOOD)
+					progressBar.SetColor( ARGB(255, 255, 0, 0) );
 			}
 		}
 		
@@ -120,5 +125,4 @@ modded class ActionTargetsCursor
 				//Print( "ItemActionsWidget::BuildCursor() progressBar.GetColor(): " + progressBar.GetColor() );
 		}*/
 	}
-
 }

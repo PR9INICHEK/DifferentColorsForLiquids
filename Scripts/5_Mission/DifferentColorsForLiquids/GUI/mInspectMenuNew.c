@@ -4,9 +4,9 @@ modded class InspectMenuNew extends UIScriptedMenu
 	override static void UpdateItemInfoLiquidType(Widget root_widget, EntityAI item)
 	{
 		// Добавляем пустую строку, чтобы отделить логи в этом файле от обычных
-		Print("\n");
+		//Print("\n");
 		// Добавляем отметку, в каком файле и методе мы сейчас находимся
-		Print("InspectMenuNew::UpdateItemInfoLiquidType() Called this method");
+		//Print("InspectMenuNew::UpdateItemInfoLiquidType() Called this method");
 		
 		if ( item.IsInherited( ZombieBase ) || item.IsInherited( Car ) ) return;
 		
@@ -21,9 +21,9 @@ modded class InspectMenuNew extends UIScriptedMenu
 		if( item_base && item_base.GetQuantity() > 0 && item_base.IsBloodContainer() )
 		{
 			BloodContainerBase blood_container = BloodContainerBase.Cast( item_base );
-			Print( "InspectMenuNew::UpdateItemInfoLiquidType() blood_container: " + blood_container );
+			//Print( "InspectMenuNew::UpdateItemInfoLiquidType() blood_container: " + blood_container );
 			
-			Print( "InspectMenuNew::UpdateItemInfoLiquidType() blood_container.GetBloodTypeVisible(): " + blood_container.GetBloodTypeVisible() );
+			//Print( "InspectMenuNew::UpdateItemInfoLiquidType() blood_container.GetBloodTypeVisible(): " + blood_container.GetBloodTypeVisible() );
 			if( blood_container.GetBloodTypeVisible() )
 			{
 				string type;
@@ -39,7 +39,7 @@ modded class InspectMenuNew extends UIScriptedMenu
 		else if ( item_base && item_base.GetQuantity() > 0 && item_base.IsLiquidContainer() )
 		{
 			int liquid_type = item_base.GetLiquidType();
-			Print( "InspectMenuNew::UpdateItemInfoLiquidType() liquid_type: " + liquid_type );
+			//Print( "InspectMenuNew::UpdateItemInfoLiquidType() liquid_type: " + liquid_type );
 			
 			switch (liquid_type)
 			{
